@@ -29,6 +29,10 @@ class MIDIApp:
         self.output_file_name = tk.StringVar()
         self.normalize_level = tk.IntVar(value=127)
         self.equalize_level = tk.IntVar(value=80)
+        
+        # New Normalization Options
+        self.ignore_muted_var = tk.BooleanVar(value=True)
+        self.velocity_threshold = tk.IntVar(value=0)
 
         # UI Layout
         self.create_widgets()
@@ -54,10 +58,16 @@ class MIDIApp:
         tk.Entry(action_frame, textvariable=self.normalize_level, width=10).grid(row=0, column=1, sticky="w", padx=5)
         tk.Button(action_frame, text="Normalize", command=self.run_normalize).grid(row=0, column=2, padx=10)
 
+        # Advanced Normalization Options
+        tk.Checkbutton(action_frame, text="Ignore Muted Channels (CC7=0)", variable=self.ignore_muted_var).grid(row=1, column=0, sticky="w", columnspan=2)
+        
+        tk.Label(action_frame, text="Ignore Notes Velocity <= :").grid(row=2, column=0, sticky="w")
+        tk.Entry(action_frame, textvariable=self.velocity_threshold, width=10).grid(row=2, column=1, sticky="w", padx=5)
+
         # Equalize Section
-        tk.Label(action_frame, text="Equalize Level (%):").grid(row=1, column=0, sticky="w", pady=10)
-        tk.Entry(action_frame, textvariable=self.equalize_level, width=10).grid(row=1, column=1, sticky="w", padx=5, pady=10)
-        tk.Button(action_frame, text="Equalize", command=self.run_equalize).grid(row=1, column=2, padx=10, pady=10)
+        tk.Label(action_frame, text="Equalize Level (%):").grid(row=3, column=0, sticky="w", pady=10)
+        tk.Entry(action_frame, textvariable=self.equalize_level, width=10).grid(row=3, column=1, sticky="w", padx=5, pady=10)
+        tk.Button(action_frame, text="Equalize", command=self.run_equalize).grid(row=3, column=2, padx=10, pady=10)
 
         # Log Area
         log_frame = tk.LabelFrame(self.root, text="Logs & Stats", padx=10, pady=10)
@@ -98,17 +108,20 @@ class MIDIApp:
             return
 
         target = self.normalize_level.get()
+        ignore_muted = self.ignore_muted_var.get()
+        threshold = self.velocity_threshold.get()
         output_path = self.get_output_path("normalized")
 
         self.log_area.delete(1.0, tk.END)
         self.log(f"Starting Normalization on {os.path.basename(input_path)}...")
+        self.log(f"Target: {target}, Ignore Muted: {ignore_muted}, Velocity Threshold: {threshold}")
         
         # Run in a separate thread to keep GUI responsive
-        threading.Thread(target=self._normalize_thread, args=(input_path, output_path, target)).start()
+        threading.Thread(target=self._normalize_thread, args=(input_path, output_path, target, ignore_muted, threshold)).start()
 
-    def _normalize_thread(self, input_path, output_path, target):
+    def _normalize_thread(self, input_path, output_path, target, ignore_muted, threshold):
         try:
-            logs = normalize_midi(input_path, output_path, target)
+            logs = normalize_midi(input_path, output_path, target, ignore_muted, threshold)
             for line in logs:
                 self.log(line)
             self.log("Done.")

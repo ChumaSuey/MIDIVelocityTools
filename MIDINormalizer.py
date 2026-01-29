@@ -3,9 +3,11 @@ import argparse
 import sys
 import os
 
-def normalize_midi(input_file, output_file=None, target_velocity=127):
+def normalize_midi(input_file, output_file=None, target_velocity=127, ignore_muted=True, velocity_threshold=0):
     """
     Normalizes the velocity of a MIDI file so the loudest note hits target_velocity (default 127).
+    ignore_muted: If True, skips instruments where all Volume (CC7) events are 0.
+    velocity_threshold: Notes with velocity <= this value are ignored for max calculation (phantom note filtering).
     Returns a list of strings containing the process log.
     """
     logs = []
@@ -20,8 +22,27 @@ def normalize_midi(input_file, output_file=None, target_velocity=127):
 
     # Find the global maximum velocity
     max_velocity = 0
+    
     for instrument in midi_data.instruments:
+        # Determine instrument name for logging
+        inst_name = instrument.name
+        if not inst_name or inst_name.strip() == "":
+            try:
+                inst_name = pretty_midi.program_to_instrument_name(instrument.program)
+            except:
+                inst_name = f"Unknown Instrument (Program {instrument.program})"
+
+        # Check for muted instrument
+        if ignore_muted:
+            cc7_events = [cc for cc in instrument.control_changes if cc.number == 7]
+            # If there are volume events and the maximum volume is 0, consider it muted
+            if cc7_events and max(cc.value for cc in cc7_events) == 0:
+                log(f"Skipping muted instrument for max velocity calc: {inst_name}")
+                continue
+
         for note in instrument.notes:
+            if note.velocity <= velocity_threshold:
+                continue
             if note.velocity > max_velocity:
                 max_velocity = note.velocity
 
@@ -97,6 +118,7 @@ if __name__ == "__main__":
         input_path = sys.argv[1]
         output_path = sys.argv[2] if len(sys.argv) > 2 else None
         # Check for optional target velocity arg if we wanted to be fancy, but keeping it simple for now
+        # CLI usage doesn't expose the new flags yet directly, assuming default behavior or simple expansion if needed later
         logs = normalize_midi(input_path, output_path)
         for line in logs:
             print(line)
