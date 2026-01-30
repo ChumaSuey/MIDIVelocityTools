@@ -1,6 +1,10 @@
-import pretty_midi
-import os
 import sys
+import os
+import pretty_midi
+
+# Add parent directory to sys.path to allow importing from root
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from MIDIEqualizer import equalize_midi
 
 def create_test_midi(filename, velocity=127):
