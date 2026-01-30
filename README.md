@@ -10,14 +10,15 @@ Scales all note velocities so the loudest note in the file reaches a target valu
 
 - **Muted Channel Filtering**: Automatically detects tracks with Volume (CC7) set to 0 and ignores them for the global maximum calculation. This ensures silent tracks with high-velocity data don't prevent your active tracks from being normalized.
 - **Phantom Note Filtering**: Allows setting a minimum velocity threshold to ignore transients or noise during the normalization process.
+- **Batch Processing Support**: Designed to work with the provided CLI scripts and GUI.
 
-### 🎚️ MIDI Equalizer
+## Project Structure
 
-Scales all note velocities by a fixed percentage (e.g., 80% of original volume). Useful for balancing tracks or bringing down the overall volume of a MIDI file.
-
-### 🖥️ User-Friendly GUI
-
-Includes a Python-based graphical interface for easy file processing without using the command line.
+- `MIDINormalizer.py`: Core logic for MIDI normalization.
+- `MIDIEqualizer.py`: Core logic for MIDI velocity scaling.
+- `GUI.py`: Graphical user interface for all tools.
+- `tests/`: Verification scripts for automated testing.
+- `tests_MIDIs/`: Sample MIDI files for testing and demonstration.
 
 ## Installation
 
