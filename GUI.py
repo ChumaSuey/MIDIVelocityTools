@@ -24,7 +24,7 @@ from MIDIFixes import fix_midi
 class MIDIApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("MIDI Velocity Tools")
+        self.root.title("MIDI Velocity Tools (MIDI-VT)")
         self.root.geometry("800x600")
 
         # Variables
