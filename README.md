@@ -1,4 +1,4 @@
-# MIDI Velocity Tools
+# MIDI Velocity Tools (MIDI-VT)
 
 A simple yet powerful set of tools to manage MIDI note velocities. This project includes a **Normalizer** to maximize the volume of your MIDI files and an **Equalizer** to scale velocities by a percentage.
 
