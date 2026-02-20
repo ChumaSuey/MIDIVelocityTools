@@ -10,29 +10,35 @@ I have created a GUI for your MIDI Normalizer and Equalizer tools. This allows y
 
 ## How to Use the GUI
 
-1.  **Run the GUI**:
+1. **Run the GUI**:
     Open your terminal or IDE and run the `GUI.py` file:
+
     ```bash
     python GUI.py
     ```
 
-2.  **Select a MIDI File**:
+2. **Select a MIDI File**:
     - Click the **Browse** button to select a `.mid` or `.midi` file from your computer.
     - The path will appear in the "Input MIDI" field.
 
-3.  **Optional: Output Name**:
+3. **Optional: Output Name**:
     - If you want to specify a custom output filename, enter it in the "Output Name" field.
     - If left blank, the tool will automatically generate a name (e.g., `filename_normalized.mid`).
 
-4.  **Normalize**:
+4. **Normalize**:
     - Adjust the "Normalize Target Velocity" if desired (default is 127).
     - Click the **Normalize** button.
     - The logs and statistics (notes count, velocity changes) will appear in the "Logs & Stats" area.
 
-5.  **Equalize**:
-    - Adjust the "Equalize Level (%)" if desired (default is 80%).
+5. **Equalize**:
+    - Adjust the "Equalize Level (%)" if desired (default is **70%**).
     - Click the **Equalize** button.
     - The logs and statistics will appear in the "Logs & Stats" area.
+
+6. **Sanitize / Fix Channels**:
+    - Click the **Sanitize / Fix Channels** button.
+    - This will re-write the MIDI file from scratch to fix channel conflicts or initialized states.
+    - Useful if instruments sound wrong or drums are playing on a melodic track.
 
 ## Features
 

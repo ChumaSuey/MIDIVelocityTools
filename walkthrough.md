@@ -30,7 +30,7 @@ python MIDINormalizer.py <input_file.mid> [output_file.mid]
 
 ## 2. MIDI Equalizer (Velocity Scaler)
 
-**Purpose**: Scales the velocity of a MIDI file by a specific percentage. This is ideal for "hot" MIDI files (where everything is 127) that need to be lowered (e.g., to 80%) to prevent clipping or harshness in digital synths.
+**Purpose**: Scales the velocity of a MIDI file by a specific percentage. This is ideal for "hot" MIDI files (where everything is 127) that need to be lowered (e.g., to 70%) to prevent clipping or harshness in digital synths.
 
 ### Usage
 
@@ -38,11 +38,11 @@ python MIDINormalizer.py <input_file.mid> [output_file.mid]
 python MIDIEqualizer.py <input_file.mid> [output_file.mid] [-l LEVEL]
 ```
 
-* `-l` or `--level`: Target percentage (integer, default is 80).
+* `-l` or `--level`: Target percentage (integer, default is **70**).
 
 ### Examples
 
-* **Scale to 80% (Standard)**:
+* **Scale to 70% (Standard)**:
 
     ```bash
     python MIDIEqualizer.py my_song.mid
@@ -54,13 +54,33 @@ python MIDIEqualizer.py <input_file.mid> [output_file.mid] [-l LEVEL]
     python MIDIEqualizer.py my_song.mid -l 60
     ```
 
+---
+
+## 3. MIDI Fixes (Sanitizer)
+
+**Purpose**: A repair tool for MIDI files that behave erratically (e.g., wrong instruments playing, channels overlapping). It reconstructs the MIDI file from scratch, forcing a clean re-assignment of channels and tracks.
+
+### Usage
+
+```bash
+python MIDIFixes.py <input_file.mid> [output_file.mid]
+```
+
+### When to use this?
+
+- If you hear drums on a piano track.
+* If an instrument sounds like the wrong patch.
+* If the file was exported from a DAW with weird settings.
+
+---
+
 ## Installation & Setup
 
 1. Ensure you have Python installed.
 2. Install dependencies:
 
     ```bash
-    pip install pretty_midi
+    pip install pretty_midi sv-ttk
     ```
 
 3. Navigate to the project folder:

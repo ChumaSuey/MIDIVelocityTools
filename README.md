@@ -12,11 +12,20 @@ Scales all note velocities so the loudest note in the file reaches a target valu
 - **Phantom Note Filtering**: Allows setting a minimum velocity threshold to ignore transients or noise during the normalization process.
 - **Batch Processing Support**: Designed to work with the provided CLI scripts and GUI.
 
+### 🛠️ MIDI Fixes (Sanitize)
+
+A utility to "clean" MIDI files by re-writing them from scratch. This forces a fresh assignment of channels and tracks, which can resolve:
+
+- **Channel Conflicts**: When multiple instruments accidentally share the same MIDI channel.
+- **Uninitialized State**: When tracks rely on previous state instead of explicit events.
+- **Corrupted Headers**: General file structure issues.
+
 ## Project Structure
 
 - `MIDINormalizer.py`: Core logic for MIDI normalization.
 - `MIDIEqualizer.py`: Core logic for MIDI velocity scaling.
-- `GUI.py`: Graphical user interface for all tools.
+- `MIDIFixes.py`: Logic for sanitizing and fixing MIDI channel assignments.
+- `GUI.py`: Graphical user interface for all tools (now with Dark Mode!).
 - `tests/`: Verification scripts for automated testing.
 - `tests_MIDIs/`: Sample MIDI files for testing and demonstration.
 
@@ -31,7 +40,7 @@ Scales all note velocities so the loudest note in the file reaches a target valu
 2. Install the required dependencies:
 
    ```bash
-   pip install pretty_midi
+   pip install pretty_midi sv-ttk
    ```
 
 ## Usage
@@ -44,9 +53,10 @@ Launch the graphical interface:
 python GUI.py
 ```
 
-- Select your MIDI file.
-- Choose between **Normalize** or **Equalize**.
-- Adjust advanced options like "Ignore Muted Channels" or "Velocity Threshold" as needed.
+- **Modern Dark Theme**: The GUI now features a sleek "Sun Valley" dark theme.
+- **Normalize**: select your file and hitting "Normalize".
+- **Equalize**: Scale velocity (Default is now **70%**).
+- **Sanitize**: Click "Sanitize / Fix Channels" to repair problematic MIDI files.
 
 ### Using the CLI
 
@@ -61,7 +71,13 @@ python MIDINormalizer.py input.mid [output.mid]
 **Equalize:**
 
 ```bash
-python MIDIEqualizer.py input.mid [output.mid] --level 80
+python MIDIEqualizer.py input.mid [output.mid] --level 70
+```
+
+**Sanitize:**
+
+```bash
+python MIDIFixes.py input.mid [output.mid]
 ```
 
 ## Requirements
