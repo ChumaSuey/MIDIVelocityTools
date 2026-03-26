@@ -40,23 +40,26 @@ A utility to "clean" MIDI files by re-writing them from scratch. This forces a f
 2. Install the required dependencies:
 
    ```bash
-   pip install pretty_midi sv-ttk
+   pip install pretty_midi customtkinter Pillow
    ```
 
 ## Usage
 
 ### Using the GUI (Recommended)
 
-Launch the graphical interface:
+Launch the modern graphical interface:
 
 ```bash
 python GUI.py
 ```
 
-- **Modern Dark Theme**: The GUI now features a sleek "Sun Valley" dark theme.
-- **Normalize**: select your file and hitting "Normalize".
-- **Equalize**: Scale velocity (Default is now **70%**).
-- **Sanitize**: Click "Sanitize / Fix Channels" to repair problematic MIDI files.
+- **Modern Sidebar Interface**: The GUI features a sleek, dark-themed sidebar for easy navigation.
+- **Differentiated Tools**:
+  - **Normalize**: Set target velocity (Default: 127), ignore muted channels, and set velocity thresholds.
+  - **Equalize**: Quickly scale velocities by a percentage.
+  - **Sanitize**: Repair problematic MIDI files by re-writing tracks and channels.
+- **Theme Switcher**: Toggle between Dark, Light, and System appearance modes instantly.
+- **Real-time Logs**: Monitor process stats and normalization details in a clean, monospaced log area.
 
 ### Using the CLI
 
