@@ -12,6 +12,14 @@ Scales all note velocities so the loudest note in the file reaches a target valu
 - **Phantom Note Filtering**: Allows setting a minimum velocity threshold to ignore transients or noise during the normalization process.
 - **Batch Processing Support**: Designed to work with the provided CLI scripts and GUI.
 
+### 🎚️ MIDI Equalizer
+
+Scales the velocity of a MIDI file by a specific percentage. This is ideal for "hot" MIDI files (where everything is 127) that need to be lowered (e.g., to 80%) to prevent clipping or harshness in digital synths.
+
+- **Percentage Scaling**: Adjust velocities proportionally to maintain dynamics while reducing overall volume.
+- **Default Level**: 80% for balanced output.
+- **Batch Processing Support**: Works with CLI and GUI for efficient workflow.
+
 ### 🛠️ MIDI Fixes (Sanitize)
 
 A utility to "clean" MIDI files by re-writing them from scratch. This forces a fresh assignment of channels and tracks, which can resolve:
@@ -74,7 +82,7 @@ python MIDINormalizer.py input.mid [output.mid]
 **Equalize:**
 
 ```bash
-python MIDIEqualizer.py input.mid [output.mid] --level 70
+python MIDIEqualizer.py input.mid [output.mid] --level 80
 ```
 
 **Sanitize:**
