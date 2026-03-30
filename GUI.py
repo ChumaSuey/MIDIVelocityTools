@@ -45,7 +45,7 @@ class MIDIApp(ctk.CTk):
         self.velocity_threshold = tk.IntVar(value=0)
         
         # Equalization Variables
-        self.equalize_level = tk.IntVar(value=70)
+        self.equalize_level = tk.IntVar(value=80)
 
         # UI Layout
         self.grid_columnconfigure(1, weight=1)

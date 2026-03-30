@@ -30,7 +30,7 @@ python MIDINormalizer.py <input_file.mid> [output_file.mid]
 
 ## 2. MIDI Equalizer (Velocity Scaler)
 
-**Purpose**: Scales the velocity of a MIDI file by a specific percentage. This is ideal for "hot" MIDI files (where everything is 127) that need to be lowered (e.g., to 70%) to prevent clipping or harshness in digital synths.
+**Purpose**: Scales the velocity of a MIDI file by a specific percentage. This is ideal for "hot" MIDI files (where everything is 127) that need to be lowered (e.g., to 80%) to prevent clipping or harshness in digital synths.
 
 ### Usage
 
@@ -38,11 +38,11 @@ python MIDINormalizer.py <input_file.mid> [output_file.mid]
 python MIDIEqualizer.py <input_file.mid> [output_file.mid] [-l LEVEL]
 ```
 
-* `-l` or `--level`: Target percentage (integer, default is **70**).
+* `-l` or `--level`: Target percentage (integer, default is **80**).
 
 ### Examples
 
-* **Scale to 70% (Standard)**:
+* **Scale to 80% (Standard)**:
 
     ```bash
     python MIDIEqualizer.py my_song.mid
