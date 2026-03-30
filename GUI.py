@@ -3,14 +3,15 @@ import sys
 
 # Fix for TclError on Windows
 # Dynamically locate Tcl/Tk libraries based on the Python installation
-base_path = sys.base_prefix
-tcl_path = os.path.join(base_path, 'tcl', 'tcl8.6').replace("\\", "/")
-tk_path = os.path.join(base_path, 'tcl', 'tk8.6').replace("\\", "/")
+if not getattr(sys, 'frozen', False):
+    base_path = sys.base_prefix
+    tcl_path = os.path.join(base_path, 'tcl', 'tcl8.6').replace("\\", "/")
+    tk_path = os.path.join(base_path, 'tcl', 'tk8.6').replace("\\", "/")
 
-if os.path.exists(tcl_path):
-    os.environ["TCL_LIBRARY"] = tcl_path
-if os.path.exists(tk_path):
-    os.environ["TK_LIBRARY"] = tk_path
+    if os.path.exists(tcl_path):
+        os.environ["TCL_LIBRARY"] = tcl_path
+    if os.path.exists(tk_path):
+        os.environ["TK_LIBRARY"] = tk_path
 
 import threading
 import tkinter as tk
