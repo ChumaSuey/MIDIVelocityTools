@@ -2,6 +2,10 @@
 
 A simple yet powerful set of tools to manage MIDI note velocities. This project includes a **Normalizer** to maximize the volume of your MIDI files and an **Equalizer** to scale velocities by a percentage.
 
+Note: MIDIs often depending on which DAW were edited, have their specific events, sometimes when equalizing or normalizing a MIDI, these events may break and cause the midi to export with oddities (or broken), the script does it's best with what it can do that with that's inside the midi... i recommend manually importing and editing the MIDI of interest in a DAW if the script doesn't work (the preferred way anyway)... Script is intended just for quick edit if possible... Thanks in advance, kind regards. 
+
+Author : Chuma.
+
 ## Features
 
 ### 🎹 MIDI Normalizer
