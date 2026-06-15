@@ -1,3 +1,4 @@
+import mido
 import pretty_midi
 import argparse
 import sys
@@ -6,14 +7,14 @@ import os
 def equalize_midi(input_file, output_file=None, level=80):
     """
     Scales the velocity of a MIDI file by a percentage (default 80%).
-    Returns a list of strings containing the process log.
+    Processes losslessly via mido and returns a list of log strings.
     """
     logs = []
     def log(msg):
         logs.append(msg)
-        # print(msg) # Optional: print to stdout as well if needed
+
     try:
-        midi_data = pretty_midi.PrettyMIDI(input_file)
+        midi_data = mido.MidiFile(input_file)
     except Exception as e:
         log(f"Error loading MIDI file: {e}")
         return logs
@@ -23,61 +24,70 @@ def equalize_midi(input_file, output_file=None, level=80):
     log(f"Target Level: {level}% (Factor: {scale_factor:.2f})")
     log("-" * 40)
 
-    for instrument in midi_data.instruments:
-        # Determine instrument name
-        inst_name = instrument.name
-        if not inst_name or inst_name.strip() == "":
-            try:
-                inst_name = pretty_midi.program_to_instrument_name(instrument.program)
-            except:
-                inst_name = f"Unknown Instrument (Program {instrument.program})"
-        
-        # Calculate stats before processing
-        notes_count = len(instrument.notes)
-        if notes_count == 0:
-            continue
-
+    for i, track in enumerate(midi_data.tracks):
+        track_name = None
+        programs = set()
+        notes_count = 0
         old_max = 0
-        for note in instrument.notes:
-            if note.velocity > old_max:
-                old_max = note.velocity
-        
-        # Apply scaling
         new_max = 0
-        for note in instrument.notes:
-            new_velocity = int(note.velocity * scale_factor)
-            # Clamp to 127, min 1 to keep note active
-            note.velocity = min(127, max(1, new_velocity))
-            if note.velocity > new_max:
-                new_max = note.velocity
 
-        log(f"Instrument: {inst_name}")
-        log(f"  - Notes: {notes_count}")
-        log(f"  - Max Velocity: {old_max} -> {new_max}")
-        log(f"  - Status: Scaled")
-        log("-" * 40)
+        for msg in track:
+            if msg.type == 'track_name':
+                track_name = msg.name
+            elif msg.type == 'program_change':
+                programs.add(msg.program)
 
-    # Determine output filename
+        if not track_name:
+            if programs:
+                program_names = []
+                for p in sorted(programs):
+                    try:
+                        program_names.append(pretty_midi.program_to_instrument_name(p))
+                    except:
+                        program_names.append(f"Instrument {p}")
+                track_name = f"Track {i} (" + ", ".join(program_names) + ")"
+            else:
+                track_name = f"Track {i}"
+
+        for msg in track:
+            if msg.type == 'note_on' and msg.velocity > 0:
+                notes_count += 1
+                if msg.velocity > old_max:
+                    old_max = msg.velocity
+
+                new_velocity = int(round(msg.velocity * scale_factor))
+                msg.velocity = min(127, max(1, new_velocity))
+
+                if msg.velocity > new_max:
+                    new_max = msg.velocity
+
+        if notes_count > 0:
+            log(f"Track: {track_name}")
+            log(f"  - Notes: {notes_count}")
+            log(f"  - Max Velocity: {old_max} -> {new_max}")
+            log(f"  - Status: Scaled")
+            log("-" * 40)
+
     if output_file is None:
         base, ext = os.path.splitext(input_file)
         output_file = f"{base}_equalized{ext}"
 
     try:
-        midi_data.write(output_file)
+        midi_data.save(output_file)
         log(f"Successfully saved equalized MIDI to: {output_file}")
     except Exception as e:
         log(f"Error saving MIDI file: {e}")
-    
+
     return logs
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Scale MIDI velocity by a percentage.")
     parser.add_argument("input_file", help="Path to the input MIDI file")
     parser.add_argument("output_file", nargs="?", help="Path to the output MIDI file (optional)")
-    parser.add_argument("-l", "--level", type=int, default=80, help="Target velocity percentage (default: 80)")
+    parser.add_argument("--level", type=float, default=80.0, help="Scaling percentage (default: 80.0)")
     
-    args = parser.parse_args()
+    args = parser.parse_argument_values() if hasattr(parser, 'parse_argument_values') else parser.parse_args()
     
-    logs = equalize_midi(args.input_file, args.output_file, args.level)
-    for line in logs:
+    results = equalize_midi(args.input_file, args.output_file, args.level)
+    for line in results:
         print(line)

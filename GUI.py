@@ -46,8 +46,7 @@ class MIDIApp(ctk.CTk):
         self.velocity_threshold = tk.IntVar(value=0)
         
         # Equalization Variables
-        self.equalize_level = tk.IntVar(value=80)
-
+        self.equalize_level = tk.IntVar(value=75) # switched to 75% (originally 80%) because of FL Studio velocity line
         # UI Layout
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
